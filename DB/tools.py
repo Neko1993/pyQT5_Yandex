@@ -18,6 +18,7 @@ def check_login(conn, login, password):
         ans = cur.fetchone()
         print('Data received')
         print(ans)
+        return ans
     except sqlite3.Error as error:
         print("Error while working with SQLite in <check_login>", error)
     finally:

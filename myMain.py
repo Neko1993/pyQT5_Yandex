@@ -16,12 +16,12 @@ class LoginForm(QWidget):
 
     def check_password(self):
         conn = DB.connect()
-        DB.check_login(conn, self.login_text.text(), self.password_text.text())
+        ans = DB.check_login(conn, self.login_text.text(), self.password_text.text())
 
         msg = QMessageBox()
 
-        if self.login_text.text() == 'admin' and self.password_text.text() == 'pass':
-            msg.setText('Успешно')
+        if ans is not None:
+            msg.setText('Добро пожаловать,  '+ans[0]+'!')
             msg.exec_()
         else:
             msg.setText('Данные введены не верно')
