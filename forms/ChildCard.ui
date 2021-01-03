@@ -13,16 +13,6 @@
   <property name="windowTitle">
    <string>Личная карточка</string>
   </property>
-  <widget class="QGraphicsView" name="photo">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>141</width>
-     <height>151</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="sName_lbl">
    <property name="geometry">
     <rect>
@@ -31,6 +21,12 @@
      <width>58</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>14</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Фамилия</string>
@@ -45,6 +41,12 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QLabel" name="fName_lbl">
    <property name="geometry">
@@ -54,6 +56,12 @@
      <width>27</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>14</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Имя</string>
@@ -68,6 +76,12 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QLabel" name="bd_lbl">
    <property name="geometry">
@@ -77,6 +91,12 @@
      <width>98</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>14</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Дата рождения</string>
@@ -90,6 +110,12 @@
      <width>231</width>
      <height>24</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>15</pointsize>
+    </font>
    </property>
   </widget>
   <widget class="QTableWidget" name="parent_tbl">
@@ -140,7 +166,7 @@
     <string>Добавить</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="save_btn">
+  <widget class="QPushButton" name="cancel_btn">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -150,10 +176,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Сохранить</string>
+    <string>Отмена</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="save_btn">
    <property name="geometry">
     <rect>
      <x>280</x>
@@ -163,7 +189,48 @@
     </rect>
    </property>
    <property name="text">
-    <string>Отмена</string>
+    <string>Сохранить</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="id_lbl">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>140</y>
+     <width>151</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="photo_lbl">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>151</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Photo</string>
    </property>
   </widget>
  </widget>

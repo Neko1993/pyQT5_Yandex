@@ -1,6 +1,9 @@
+import datetime
 import sys
 
 from PyQt5 import uic, QtWidgets
+from PyQt5.QtCore import QDate
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox,
                              QMainWindow, QTableWidgetItem)
 
@@ -73,6 +76,26 @@ class ChildCard(QWidget):
     def __init__(self, card):
         super(QWidget, self).__init__()
         uic.loadUi('forms/ChildCard.ui', self)
+        self.id_lbl.setText(str(card[0]))
+        self.photo_lbl.setPixmap(QPixmap(card[1]))
+        self.fName_edit.setText(card[2])
+        self.sName_edit.setText(card[3])
+        self.bd_edit.setDate(QDate(card[4]))
+        self.parent_tbl.setRowCount(len(card[5]))
+        for i, row in enumerate(card[5]):
+            for j, elem in enumerate(row):
+                self.parent_tbl.setItem(i, j, QTableWidgetItem(elem))
+
+        self.save_btn.clicked.connect(self.save)
+        self.cancel_btn.clicked.connect(self.ext)
+
+    def save(self):
+        data = ()
+        DB.update(data)
+        self.close()
+
+    def ext(self):
+        self.close()
 
 
 
