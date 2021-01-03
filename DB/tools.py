@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 
 
@@ -26,7 +27,15 @@ class db_worker:
             self.conn.commit()
             ans = self.cur.fetchone()
             print('Data received')
-            print(ans)
+            # print(ans)
             return ans
         except sqlite3.Error as error:
             print("Error while working with SQLite in <check_login>", error)
+
+    def search(self, request):
+        t = str(datetime.date(2005, 3, 14))
+        return [('Петр', 'Исаев', t), ('Мария', 'Миронова', t)]
+
+    def child_card(self, request):
+        return ('Петр', 'Исаев', '2005-03-14', (('Мария', 'Ивановна', 'Исаева', ('+79271804313', '+72342356454')),
+                                                ('Игорь', 'Петрович', 'Иваев', ('+71234567283'))))

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>540</width>
+    <height>403</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Личная карточка</string>
+  </property>
+  <widget class="QGraphicsView" name="photo">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>141</width>
+     <height>151</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="sName_lbl">
+   <property name="geometry">
+    <rect>
+     <x>224</x>
+     <y>39</y>
+     <width>58</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Фамилия</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="fName_edit">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>8</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="fName_lbl">
+   <property name="geometry">
+    <rect>
+     <x>255</x>
+     <y>8</y>
+     <width>27</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Имя</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="sName_edit">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>39</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bd_lbl">
+   <property name="geometry">
+    <rect>
+     <x>184</x>
+     <y>70</y>
+     <width>98</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Дата рождения</string>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="bd_edit">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>70</y>
+     <width>231</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="parent_tbl">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>170</y>
+     <width>501</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>Имя</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Отчество</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Фамилия</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Телефон</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Родство</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="add_parent_btn">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>130</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="save_btn">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>350</y>
+     <width>221</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>350</y>
+     <width>221</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Отмена</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
