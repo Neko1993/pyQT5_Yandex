@@ -37,9 +37,9 @@ class db_worker:
         return [('Петр', 'Исаев', t), ('Мария', 'Миронова', t)]
 
     def child_card(self, request):
-        return (1, None, 'Петр', 'Исаев', datetime.date(2005, 3, 14), (('Мария', 'Ивановна', 'Исаева', '+79271804313, +72342356454', 'мама'),
+        return (1, 'images/photo1.jpg', 'Петр', 'Исаев', datetime.date(2005, 3, 14), (('Мария', 'Ивановна', 'Исаева', '+79271804313, +72342356454', 'мама'),
                                                 ('Игорь', 'Петрович', 'Иcаев', '+71234567283', 'папа')))
 
     def update(self, request):
-        print('Saved')
+        print('Saved:', request)
         pass

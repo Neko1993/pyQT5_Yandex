@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>224</x>
-     <y>39</y>
+     <y>43</y>
      <width>58</width>
      <height>16</height>
     </rect>
@@ -30,6 +30,9 @@
    </property>
    <property name="text">
     <string>Фамилия</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="fName_edit">
@@ -52,7 +55,7 @@
    <property name="geometry">
     <rect>
      <x>255</x>
-     <y>8</y>
+     <y>10</y>
      <width>27</width>
      <height>16</height>
     </rect>
@@ -65,6 +68,9 @@
    </property>
    <property name="text">
     <string>Имя</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="sName_edit">
@@ -87,7 +93,7 @@
    <property name="geometry">
     <rect>
      <x>184</x>
-     <y>70</y>
+     <y>75</y>
      <width>98</width>
      <height>16</height>
     </rect>
@@ -100,6 +106,9 @@
    </property>
    <property name="text">
     <string>Дата рождения</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QDateEdit" name="bd_edit">
@@ -229,8 +238,14 @@
      <height>161</height>
     </rect>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
    <property name="text">
     <string>Photo</string>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
