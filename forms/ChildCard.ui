@@ -116,7 +116,7 @@
     <rect>
      <x>290</x>
      <y>70</y>
-     <width>231</width>
+     <width>235</width>
      <height>24</height>
     </rect>
    </property>
@@ -125,6 +125,16 @@
      <family>Times New Roman</family>
      <pointsize>15</pointsize>
     </font>
+   </property>
+   <property name="calendarPopup">
+    <bool>true</bool>
+   </property>
+   <property name="date">
+    <date>
+     <year>1985</year>
+     <month>1</month>
+     <day>1</day>
+    </date>
    </property>
   </widget>
   <widget class="QTableWidget" name="parent_tbl">

@@ -1,4 +1,3 @@
-import datetime
 import os
 import sys
 from shutil import copy2
@@ -6,8 +5,8 @@ from uuid import uuid4
 
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import QDate, QObject, pyqtSignal, QEvent
-from PyQt5.QtGui import QPixmap, QPicture
-from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox,
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import (QApplication, QWidget, QMessageBox,
                              QMainWindow, QTableWidgetItem, QFileDialog)
 
 from DB.tools import db_worker
@@ -66,6 +65,7 @@ class MainWindow(QMainWindow):
 
         self.search_btn.clicked.connect(self.search)
         self.exit_btn.clicked.connect(self.ext)
+        self.add_new_btn.clicked.connect(self.new_child)
         self.search_tbl.doubleClicked.connect(self.more_data)
 
     def search(self):
@@ -76,6 +76,10 @@ class MainWindow(QMainWindow):
             for j, elem in enumerate(row):
                 self.search_tbl.setItem(i, j, QTableWidgetItem(elem))
         print('done')
+
+    def new_child(self):
+        self.form = ChildCard()
+        self.form.show()
 
     def more_data(self):
         row_number = self.search_tbl.selectionModel().selectedIndexes()[0].row()
@@ -93,61 +97,81 @@ class MainWindow(QMainWindow):
 
 
 class ChildCard(QWidget):
-    def __init__(self, card):
+    def __init__(self, card=None):
         super(QWidget, self).__init__()
         uic.loadUi('forms/ChildCard.ui', self)
-        self.image_path = card[1]
+        self.image_path = None
+        if card is not None:
+            self.image_path = card[1]
+            self.id_lbl.setText(str(card[0]))
+            self.photo_lbl.setPixmap(QPixmap(card[1]))
+            self.fName_edit.setText(card[2])
+            self.sName_edit.setText(card[3])
+            self.bd_edit.setDate(QDate(card[4]))
+            self.parent_tbl.setRowCount(len(card[5]))
+            self.parent_tbl.setColumnWidth(3, 110)
+            header = self.parent_tbl.horizontalHeader()
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+            header = self.parent_tbl.verticalHeader()
+            for i, row in enumerate(card[5]):
+                for j, elem in enumerate(row):
+                    self.parent_tbl.setItem(i, j, QTableWidgetItem(elem))
+                header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
 
-        self.id_lbl.setText(str(card[0]))
-        self.photo_lbl.setPixmap(QPixmap(card[1]))
-        self.fName_edit.setText(card[2])
-        self.sName_edit.setText(card[3])
-        self.bd_edit.setDate(QDate(card[4]))
-        self.parent_tbl.setRowCount(len(card[5]))
-        self.parent_tbl.setColumnWidth(3, 110)
-        header = self.parent_tbl.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
-        header = self.parent_tbl.verticalHeader()
-        for i, row in enumerate(card[5]):
-            for j, elem in enumerate(row):
-                self.parent_tbl.setItem(i, j, QTableWidgetItem(elem))
-            header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
-
-        # self.photo_lbl.doubleClicked.connect(self.load_photo)
         clickable(self.photo_lbl).connect(self.load_photo)
+        self.add_parent_btn.clicked.connect(self.add_parent)
         self.save_btn.clicked.connect(self.save)
         self.cancel_btn.clicked.connect(self.ext)
+
+    def add_parent(self):
+        row_ind = self.parent_tbl.rowCount()
+        self.parent_tbl.insertRow(row_ind)
+        for col in range(self.parent_tbl.columnCount()):
+            self.parent_tbl.setItem(row_ind, col, QTableWidgetItem(""))
 
     def load_photo(self):
         img_dir = os.getcwd()+'/images/'
         self.image_path = QFileDialog.getOpenFileName(self, 'Open file', img_dir)[0]
+        self.photo_lbl.setPixmap(QPixmap(self.image_path))
         print(self.image_path)
 
     def save(self):
+        chk = True
+        if self.fName_edit.text() == '' and self.sName_edit.text():
+            chk = False
         parents_data = []
         for row in range(self.parent_tbl.rowCount()):
             parent = []
             for col in range(self.parent_tbl.columnCount()):
                 parent.append(self.parent_tbl.takeItem(row, col).text())
-            parents_data.append(tuple(parent))
+            if parent.count('') != len(parent):
+                parents_data.append(tuple(parent))
+        if len(parents_data) == 0:
+            chk = False
+        if chk:
+            if self.image_path is not None:
+                img_dir = os.getcwd()+'/images/'
+                if img_dir not in self.image_path and 'images/' not in self.image_path:
+                    # TODO: Resize image
+                    new_fname = str(uuid4())
+                    copy2(self.image_path, img_dir+new_fname)
+                    self.image_path = new_fname
+                else:
+                    self.image_path = self.image_path.split('/')[-1]
+                self.image_path = 'images/'+self.image_path
 
-        img_dir = os.getcwd()+'/images/'
-        if img_dir not in self.image_path:
-            new_fname = str(uuid4())
-            copy2(self.image_path, img_dir+new_fname)
-            self.image_path = new_fname
+            data = (self.id_lbl.text(), self.image_path,
+                    self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
+                    tuple(parents_data))
+            DB.update(data)
+            self.close()
         else:
-            self.image_path = self.image_path.split('/')[-1]
-        self.image_path = 'images/'+self.image_path
-
-        data = (self.id_lbl.text(), self.image_path,
-                self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
-                tuple(parents_data))
-        DB.update(data)
-        self.close()
+            msg = QMessageBox()
+            msg.setText('Не все данные введены')
+            msg.exec_()
 
     def ext(self):
         self.close()
