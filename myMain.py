@@ -15,8 +15,8 @@ class LoginForm(QWidget):
         self.login_btn.clicked.connect(self.check_password)
 
     def check_password(self):
-        # conn = DB.connect()
-        # DB.check_login(conn, self.login_text.text(), self.password_text.text())
+        conn = DB.connect()
+        DB.check_login(conn, self.login_text.text(), self.password_text.text())
 
         msg = QMessageBox()
 

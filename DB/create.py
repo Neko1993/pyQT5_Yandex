@@ -4,12 +4,12 @@ import sqlite3
 def create_tables(conn):
     try:
         cur = conn.cursor()
-        cur.execute("""DROP table employees;""")
-        cur.execute("""DROP table children;""")
+        cur.execute("""DROP table IF EXIST employees;""")
+        cur.execute("""DROP table IF EXIST children;""")
         conn.commit()
         print('Table\'s deleted')
 
-        cur.execute("""CREATE TABLE IF NOT EXISTS employees(
+        cur.execute("""CREATE TABLE employees(
                    employeeid INT PRIMARY KEY,
                    fname TEXT NOT NULL,
                    lname TEXT NOT NULL,
@@ -18,7 +18,7 @@ def create_tables(conn):
                 """)
         conn.commit()
 
-        cur.execute("""CREATE TABLE IF NOT EXISTS children(
+        cur.execute("""CREATE TABLE children(
                    childid INT PRIMARY KEY,
                    fname TEXT NOT NULL,
                    lname TEXT,
