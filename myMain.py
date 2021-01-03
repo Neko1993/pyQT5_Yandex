@@ -1,11 +1,14 @@
 import datetime
+import os
 import sys
+from shutil import copy2
+from uuid import uuid4
 
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import QDate, QObject, pyqtSignal, QEvent
 from PyQt5.QtGui import QPixmap, QPicture
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox,
-                             QMainWindow, QTableWidgetItem)
+                             QMainWindow, QTableWidgetItem, QFileDialog)
 
 from DB.tools import db_worker
 
@@ -119,8 +122,9 @@ class ChildCard(QWidget):
         self.cancel_btn.clicked.connect(self.ext)
 
     def load_photo(self):
-        print('clicked')
-        pass
+        img_dir = os.getcwd()+'/images/'
+        self.image_path = QFileDialog.getOpenFileName(self, 'Open file', img_dir)[0]
+        print(self.image_path)
 
     def save(self):
         parents_data = []
@@ -129,9 +133,19 @@ class ChildCard(QWidget):
             for col in range(self.parent_tbl.columnCount()):
                 parent.append(self.parent_tbl.takeItem(row, col).text())
             parents_data.append(tuple(parent))
-        data = (
-        self.id_lbl.text(), None, self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
-        tuple(parents_data))
+
+        img_dir = os.getcwd()+'/images/'
+        if img_dir not in self.image_path:
+            new_fname = str(uuid4())
+            copy2(self.image_path, img_dir+new_fname)
+            self.image_path = new_fname
+        else:
+            self.image_path = self.image_path.split('/')[-1]
+        self.image_path = 'images/'+self.image_path
+
+        data = (self.id_lbl.text(), self.image_path,
+                self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
+                tuple(parents_data))
         DB.update(data)
         self.close()
 
