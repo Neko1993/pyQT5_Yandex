@@ -70,12 +70,10 @@ class MainWindow(QMainWindow):
 
     def search(self):
         ans = DB.search(self.search_edit.text())
-        print(ans)
         self.search_tbl.setRowCount(len(ans))
         for i, row in enumerate(ans):
             for j, elem in enumerate(row):
                 self.search_tbl.setItem(i, j, QTableWidgetItem(elem))
-        print('done')
 
     def new_child(self):
         self.form = ChildCard()
