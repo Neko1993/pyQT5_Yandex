@@ -19,7 +19,7 @@ class db_worker:
             self.cur = self.conn.cursor()
             print('Connected')
         except sqlite3.Error as error:
-            print("Error while working with SQLite", error)
+            print("Error while working with SQLite in <connect>", error)
 
     def check_login(self, login, password):
         try:
@@ -42,4 +42,7 @@ class db_worker:
 
     def update(self, request):
         print('Saved:', request)
-        pass
+
+    def delete(self, request):
+        print('Deleted: ', request)
+

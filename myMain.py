@@ -123,8 +123,10 @@ class ChildCard(QWidget):
 
         clickable(self.photo_lbl).connect(self.load_photo)
         self.add_parent_btn.clicked.connect(self.add_parent)
+        self.del_parent_btn.clicked.connect(self.del_parent)
         self.save_btn.clicked.connect(self.save)
         self.cancel_btn.clicked.connect(self.ext)
+        self.del_btn.clicked.connect(self.delete)
 
     def add_parent(self):
         row_ind = self.parent_tbl.rowCount()
@@ -132,8 +134,15 @@ class ChildCard(QWidget):
         for col in range(self.parent_tbl.columnCount()):
             self.parent_tbl.setItem(row_ind, col, QTableWidgetItem(""))
 
+    def del_parent(self):
+        selected_rows = set()
+        for elem in self.parent_tbl.selectedItems():
+            selected_rows.add(elem.row())
+        for row in sorted(selected_rows, reverse=True):
+            self.parent_tbl.removeRow(row)
+
     def load_photo(self):
-        img_dir = os.getcwd()+'/images/'
+        img_dir = os.getcwd() + '/images/'
         self.image_path = QFileDialog.getOpenFileName(self, 'Open file', img_dir)[0]
         self.photo_lbl.setPixmap(QPixmap(self.image_path))
         print(self.image_path)
@@ -153,15 +162,15 @@ class ChildCard(QWidget):
             chk = False
         if chk:
             if self.image_path is not None:
-                img_dir = os.getcwd()+'/images/'
+                img_dir = os.getcwd() + '/images/'
                 if img_dir not in self.image_path and 'images/' not in self.image_path:
                     # TODO: Resize image
                     new_fname = str(uuid4())
-                    copy2(self.image_path, img_dir+new_fname)
+                    copy2(self.image_path, img_dir + new_fname)
                     self.image_path = new_fname
                 else:
                     self.image_path = self.image_path.split('/')[-1]
-                self.image_path = 'images/'+self.image_path
+                self.image_path = 'images/' + self.image_path
 
             data = (self.id_lbl.text(), self.image_path,
                     self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
@@ -175,6 +184,13 @@ class ChildCard(QWidget):
 
     def ext(self):
         self.close()
+
+    def delete(self):
+        qm = QMessageBox()
+        ret = qm.question(self, '', "Вы хотите удалить карточку ученика?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            DB.delete(self.id_lbl.text())
+            self.ext()
 
 
 if __name__ == '__main__':
