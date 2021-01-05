@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
     def __init__(self, employee):
         super(MainWindow, self).__init__()
         uic.loadUi('forms/MainWindow.ui', self)
+        self.setFixedSize(self.width(), self.height())
         header = self.search_tbl.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
@@ -98,6 +99,7 @@ class ChildCard(QWidget):
     def __init__(self,parent,  card=None):
         super(QWidget, self).__init__()
         uic.loadUi('forms/ChildCard.ui', self)
+        self.setFixedSize(self.width(), self.height())
         self.image_path = None
         self.parent = parent
         self.parent_tbl.setColumnHidden(0, True)
@@ -202,7 +204,7 @@ class ChildCard(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    form = MainWindow(('1', '2'))
+    form = LoginForm()
     form.show()
 
     sys.exit(app.exec_())
