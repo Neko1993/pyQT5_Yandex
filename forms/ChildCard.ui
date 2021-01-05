@@ -148,6 +148,16 @@
    </property>
    <column>
     <property name="text">
+     <string>ID</string>
+    </property>
+    <property name="font">
+     <font>
+      <italic>true</italic>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
      <string>Имя</string>
     </property>
    </column>

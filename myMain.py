@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
                 self.search_tbl.setItem(i, j, QTableWidgetItem(elem))
 
     def new_child(self):
-        self.form = ChildCard()
+        self.form = ChildCard(self)
         self.form.show()
 
     def more_data(self):
@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
                              self.search_tbl.item(row_number, 1).text(),
                              self.search_tbl.item(row_number, 2).text()))
         print(ans)
-        self.form = ChildCard(ans)
+        self.form = ChildCard(self, ans)
         self.form.show()
 
     def ext(self):
@@ -95,10 +95,12 @@ class MainWindow(QMainWindow):
 
 
 class ChildCard(QWidget):
-    def __init__(self, card=None):
+    def __init__(self,parent,  card=None):
         super(QWidget, self).__init__()
         uic.loadUi('forms/ChildCard.ui', self)
         self.image_path = None
+        self.parent = parent
+        self.parent_tbl.setColumnHidden(0, True)
         if card is not None:
             self.image_path = card[1]
             self.id_lbl.setText(str(card[0]))
@@ -107,16 +109,17 @@ class ChildCard(QWidget):
             self.sName_edit.setText(card[3])
             self.bd_edit.setDate(QDate(card[4]))
             self.parent_tbl.setRowCount(len(card[5]))
-            self.parent_tbl.setColumnWidth(3, 110)
+            self.parent_tbl.setColumnWidth(4, 110)
             header = self.parent_tbl.horizontalHeader()
-            header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+            # header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
             header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-            header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
             header = self.parent_tbl.verticalHeader()
             for i, row in enumerate(card[5]):
                 for j, elem in enumerate(row):
-                    self.parent_tbl.setItem(i, j, QTableWidgetItem(elem))
+                    self.parent_tbl.setItem(i, j, QTableWidgetItem(str(elem)))
                 header.setSectionResizeMode(i, QtWidgets.QHeaderView.ResizeToContents)
 
         clickable(self.photo_lbl).connect(self.load_photo)
@@ -155,6 +158,7 @@ class ChildCard(QWidget):
             for col in range(self.parent_tbl.columnCount()):
                 parent.append(self.parent_tbl.takeItem(row, col).text())
             if parent.count('') != len(parent):
+                parent[0] = parent[0]
                 parents_data.append(tuple(parent))
         if len(parents_data) == 0:
             chk = False
@@ -174,7 +178,7 @@ class ChildCard(QWidget):
                     self.fName_edit.text(), self.sName_edit.text(), self.bd_edit.date().toPyDate(),
                     tuple(parents_data))
             DB.update(data)
-            self.close()
+            self.ext()
         else:
             msg = QMessageBox()
             msg.setText('Не все данные введены')
@@ -182,13 +186,17 @@ class ChildCard(QWidget):
 
     def ext(self):
         self.close()
+        self.parent.search()
 
     def delete(self):
-        qm = QMessageBox()
-        ret = qm.question(self, '', "Вы хотите удалить карточку ученика?", qm.Yes | qm.No)
-        if ret == qm.Yes:
-            DB.delete(self.id_lbl.text())
-            self.ext()
+        if self.id_lbl.text() != '':
+            qm = QMessageBox()
+            ret = qm.question(self, '', "Вы хотите удалить карточку ученика?", qm.Yes | qm.No)
+            if ret == qm.Yes:
+                DB.delete(int(self.id_lbl.text()))
+            else:
+                return
+        self.ext()
 
 
 if __name__ == '__main__':

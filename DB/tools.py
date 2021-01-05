@@ -45,7 +45,9 @@ class db_worker:
             return ans
         elif len(sp) == 2:
             try:
-                self.cur.execute("SELECT fname, lname, bd FROM children WHERE (fname=? AND lname=?) OR (fname=? AND lname=?)", (sp[0], sp[1], sp[1], sp[0]))
+                self.cur.execute(
+                    "SELECT fname, lname, bd FROM children WHERE (fname=? AND lname=?) OR (fname=? AND lname=?)",
+                    (sp[0], sp[1], sp[1], sp[0]))
                 self.conn.commit()
                 ans = self.cur.fetchall()
                 print('BACK: ', ans)
@@ -56,7 +58,8 @@ class db_worker:
 
     def child_card(self, request):
         try:
-            self.cur.execute("SELECT childid, photo,fname, lname, bd FROM children WHERE (fname=? AND lname=? AND bd=?)", request)
+            self.cur.execute(
+                "SELECT childid, photo,fname, lname, bd FROM children WHERE (fname=? AND lname=? AND bd=?)", request)
             self.conn.commit()
             ans = self.cur.fetchone()
         except sqlite3.Error as error:
@@ -64,7 +67,8 @@ class db_worker:
         ans = list(ans)
         ans[4] = datetime.date.fromisoformat(ans[4])
         try:
-            self.cur.execute("SELECT fname,mname, lname, number, role, parentid FROM parents WHERE childid=?", (str(ans[0])))
+            self.cur.execute("SELECT parentid, fname,mname, lname, number, role FROM parents WHERE childid=?",
+                             (str(ans[0])))
             self.conn.commit()
             parents = self.cur.fetchall()
         except sqlite3.Error as error:
@@ -73,13 +77,46 @@ class db_worker:
         print('BACK: ', ans)
         return tuple(ans)
 
-
-        return (1, 'images/photo1.jpg', 'Петр', 'Исаев', datetime.date(2005, 3, 14), (('Мария', 'Ивановна', 'Исаева', '+79271804313, +72342356454', 'мама'),
-                                                ('Игорь', 'Петрович', 'Иcаев', '+71234567283', 'папа')))
-
     def update(self, request):
-        print('Saved:', request)
+        if request[0] == '':
+            try:
+                self.cur.execute("INSERT INTO children(photo, fname, lname,bd) VALUES(?,?,?,?)", request[1:5])
+                self.conn.commit()
+                new_id = self.cur.lastrowid
+                self.cur.executemany(
+                    "INSERT INTO parents(childid, fname, mname, lname, number, role) VALUES(?,?,?,?,?,?)",
+                    [(new_id,) + tuple(request[5][i][1:]) for i in range(len(request[5]))])
+                self.conn.commit()
+                print('Created new child card')
+            except sqlite3.Error as error:
+                print("Error while working with SQLite in <update>", error)
+        else:
+            try:
+                self.cur.execute("UPDATE children SET photo=?, fname=?, lname=?, bd=? where childid=?",
+                                 tuple(request[1:5]) + (request[0],))
+                self.conn.commit()
+                for parent in request[5]:
+                    if parent[0] == '':
+                        self.cur.execute(
+                            "INSERT INTO parents(childid, fname, mname, lname, number, role) VALUES(?,?,?,?,?,?)",
+                            (request[0],) + parent[1:])
+                    else:
+                        data = (request[0],) + tuple(parent[1:]) + (parent[0],)
+                        print('BACK try:', data)
+                        self.cur.execute(
+                            "UPDATE parents SET childid=?, fname=?, mname=?, lname=?, number=?, role=? where parentid=?",
+                            tuple(data))
+                    self.conn.commit()
+                print('Updated child card')
+            except sqlite3.Error as error:
+                print("Error while working with SQLite in <update>", error)
 
     def delete(self, request):
-        print('Deleted: ', request)
-
+        try:
+            self.cur.execute("DELETE FROM parents WHERE childid=?", (str(request),))
+            self.conn.commit()
+            self.cur.execute("DELETE FROM children WHERE childid=?", (str(request),))
+            self.conn.commit()
+            print('Deleted: ', request)
+        except sqlite3.Error as error:
+            print("Error while working with SQLite in <child_card>", error)
